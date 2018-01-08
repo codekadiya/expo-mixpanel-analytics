@@ -6,7 +6,7 @@ Mixpanel integration for use with React Native apps built on Expo.
 ## Installation
 
 ```
-npm install expo-mixpanel-analytics --save
+npm install https://github.com/codekadiya/expo-mixpanel-analytics.git --save
 ```
 
 ## Usage
