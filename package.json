@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/codekadiya/expo-mixpanel-analytics.git"
   },
   "keywords": [
     "react",
@@ -20,9 +20,8 @@
   "author": "Subhash Vithanapathirana",
   "license": "MIT",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/codekadiya/expo-mixpanel-analytics/issues"
   },
-  "homepage": "",
   "dependencies": {
     "buffer": "^5.0.8"
   },
