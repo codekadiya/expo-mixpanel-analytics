@@ -4,13 +4,17 @@ import {Buffer} from 'buffer';
 
 const {width, height} = Dimensions.get('window');
 
-export default class Analytics {
+const MIXPANEL_API_URL = 'http://api.mixpanel.com';
+
+export default class ExpoMixpanelAnalytics {
   constructor(token) {
     this.ready = false;
     this.queue = [];
 
     this.token = token;
+    this.userId = null;
     this.clientId = Constants.deviceId;
+    this.identify(this.clientId);
 
     Constants.getWebViewUserAgentAsync()
       .then(userAgent => {
@@ -21,91 +25,97 @@ export default class Analytics {
         this.screenSize = `${width}x${height}`;
 
         this.ready = true;
-        this.flush();
+        this._flush();
       });
   }
 
-  addEvent(name, props, userId) {
+  track(name, props) {
     this.queue.push({
       name,
-      props,
-      userId
+      props
     });
-    this.flush();
+    this._flush();
   }
 
-  flush() {
+  identify(userId) {
+    this.userId = userId;
+  }
+
+  people_set(props) {
+    this._people('set', props);
+  }
+
+  people_set_once(props) {
+    this._people('set_once', props);
+  }
+
+  people_unset(props) {
+    this._people('unset', props);
+  }
+
+  people_increment(props) {
+    this._people('add', props);
+  }
+
+  people_append(props) {
+    this._people('append', props);
+  }
+
+  people_union(props) {
+    this._people('union', props);
+  }
+
+  people_delete_user() {
+    this._people('delete', '');
+  }
+
+  // ===========================================================================================
+
+  _flush() {
     if (this.ready) {
       while (this.queue.length) {
         const event = this.queue.pop();
-        this._sendEvent(event)
+        this._pushEvent(event)
           .then(() => event.sent = true);
       }
     }
   }
 
-  _sendEvent(event) {
+  _people(operation, props) {
+    if (this.userId) {
+      const data = {
+        "$token": this.token,
+        "$distinct_id": this.userId
+      };
+      data[`$${operation}`] = props;
+
+      this._pushProfile(data);
+    }
+  }
+
+  _pushEvent(event) {
     let data = {
       event: event.name,
       properties: event.props
     };
-    data.properties.distinct_id = event.userId ? event.userId : this.clientId;
+    if (this.userId) {
+      data.properties.distinct_id = this.userId;
+    }
     data.properties.token = this.token;
     data.properties.user_agent = this.userAgent;
     data.properties.app_name = this.appName;
     data.properties.app_id = this.appId;
     data.properties.app_version = this.appVersion;
     data.properties.screen_size = this.screenSize;
+    data.properties.client_id = this.clientId;
 
     data = new Buffer(JSON.stringify(data)).toString('base64');
 
-    const url = `http://api.mixpanel.com/track/?data=${data}`;
-
-    return fetch(url, {
-      method: 'get',
-      headers: {
-        'User-Agent': this.userAgent
-      }
-    });
+    return fetch(`${MIXPANEL_API_URL}/track/?data=${data}`);
   }
 
-  addProfile(userId, firstName, lastName, email, phone) {
-    const data = {
-      "$token": this.token,
-      "$distinct_id": userId,
-      "$set": {
-        "$first_name": firstName,
-        "$last_name": lastName,
-        "$email": email,
-        "$phone": phone
-      }
-    };
-
-    this._sendProfile(data);
-  }
-
-  updateProfile(userId, op, props) {
-    const data = {
-      "$token": this.token,
-      "$distinct_id": userId,
-    };
-    data[`$${op}`] = props;
-
-    this._sendProfile(data);
-  }
-
-  _sendProfile(data) {
-
+  _pushProfile(data) {
     data = new Buffer(JSON.stringify(data)).toString('base64');
-
-    const url = `http://api.mixpanel.com/engage/?data=${data}`;
-
-    return fetch(url, {
-      method: 'get',
-      headers: {
-        'User-Agent': this.userAgent
-      }
-    });
+    return fetch(`${MIXPANEL_API_URL}/engage/?data=${data}`);
   }
-
 }
