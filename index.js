@@ -120,7 +120,7 @@ export default class ExpoMixpanelAnalytics {
       data.properties.model = this.model;
     }
     if (this.osVersion) {
-      data.properties.osVersion = this.osVersion;
+      data.properties.os_version = this.osVersion;
     }
 
     data = new Buffer(JSON.stringify(data)).toString('base64');
