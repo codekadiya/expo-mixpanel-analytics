@@ -23,6 +23,10 @@ export default class ExpoMixpanelAnalytics {
         this.appId = Constants.manifest.slug;
         this.appVersion = Constants.manifest.version;
         this.screenSize = `${width}x${height}`;
+        this.deviceName = Contants.deviceName;
+        this.platform = Contants.platform.ios.platform;
+        this.model = Contants.platform.ios.model;
+        this.osVersion = Contants.platform.ios.systemVersion;
 
         this.ready = true;
         this._flush();
@@ -108,6 +112,16 @@ export default class ExpoMixpanelAnalytics {
     data.properties.app_version = this.appVersion;
     data.properties.screen_size = this.screenSize;
     data.properties.client_id = this.clientId;
+    data.properties.device_name = this.deviceName;
+    if (this.platform) {
+      data.properties.platform = this.platform;
+    }
+    if (this.model) {
+      data.properties.model = this.model;
+    }
+    if (this.osVersion) {
+      data.properties.osVersion = this.osVersion;
+    }
 
     data = new Buffer(JSON.stringify(data)).toString('base64');
 
