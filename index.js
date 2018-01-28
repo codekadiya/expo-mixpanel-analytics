@@ -24,13 +24,21 @@ export default class ExpoMixpanelAnalytics {
         this.appVersion = Constants.manifest.version;
         this.screenSize = `${width}x${height}`;
         this.deviceName = Constants.deviceName;
-        this.platform = Constants.platform.ios.platform;
-        this.model = Constants.platform.ios.model;
-        this.osVersion = Constants.platform.ios.systemVersion;
+        this.getPlatformData();
 
         this.ready = true;
         this._flush();
       });
+  }
+  
+  getPlatformData() {
+    if (Constants.platform.ios) {
+      this.platform = Constants.platform.ios.platform;
+      this.model = Constants.platform.ios.model;
+      this.osVersion = Constants.platform.ios.systemVersion;      
+    } else {
+      this.platform = "Android";
+    }
   }
 
   track(name, props) {
