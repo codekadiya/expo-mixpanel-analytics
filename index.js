@@ -23,10 +23,10 @@ export default class ExpoMixpanelAnalytics {
         this.appId = Constants.manifest.slug;
         this.appVersion = Constants.manifest.version;
         this.screenSize = `${width}x${height}`;
-        this.deviceName = Contants.deviceName;
-        this.platform = Contants.platform.ios.platform;
-        this.model = Contants.platform.ios.model;
-        this.osVersion = Contants.platform.ios.systemVersion;
+        this.deviceName = Constants.deviceName;
+        this.platform = Constants.platform.ios.platform;
+        this.model = Constants.platform.ios.model;
+        this.osVersion = Constants.platform.ios.systemVersion;
 
         this.ready = true;
         this._flush();
