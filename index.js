@@ -29,6 +29,8 @@ export default class ExpoMixpanelAnalytics {
           this.platform = Constants.platform.ios.platform;
           this.model = Constants.platform.ios.model;
           this.osVersion = Constants.platform.ios.systemVersion;
+        } else {
+          this.platform = "android";
         }
 
         this.ready = true;
