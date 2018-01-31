@@ -5,6 +5,7 @@ import {Buffer} from 'buffer';
 const {width, height} = Dimensions.get('window');
 
 const MIXPANEL_API_URL = 'http://api.mixpanel.com';
+const isIosPlatform = () => Platform.OS === 'ios';
 
 export default class ExpoMixpanelAnalytics {
   constructor(token) {
@@ -24,9 +25,11 @@ export default class ExpoMixpanelAnalytics {
         this.appVersion = Constants.manifest.version;
         this.screenSize = `${width}x${height}`;
         this.deviceName = Constants.deviceName;
-        this.platform = Constants.platform.ios.platform;
-        this.model = Constants.platform.ios.model;
-        this.osVersion = Constants.platform.ios.systemVersion;
+        if (isIosPlatform) {
+          this.platform = Constants.platform.ios.platform;
+          this.model = Constants.platform.ios.model;
+          this.osVersion = Constants.platform.ios.systemVersion;
+        }
 
         this.ready = true;
         this._flush();
