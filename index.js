@@ -5,7 +5,7 @@ import {Buffer} from 'buffer';
 const {width, height} = Dimensions.get('window');
 
 const MIXPANEL_API_URL = 'http://api.mixpanel.com';
-const isIosPlatform = () => Platform.OS === 'ios';
+const isIosPlatform = Platform.OS === 'ios';
 
 export default class ExpoMixpanelAnalytics {
   constructor(token) {
