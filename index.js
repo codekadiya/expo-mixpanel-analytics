@@ -50,6 +50,10 @@ export default class ExpoMixpanelAnalytics {
     this.userId = userId;
   }
 
+  reset() {
+    this.identify(this.clientId);
+  }
+
   people_set(props) {
     this._people('set', props);
   }

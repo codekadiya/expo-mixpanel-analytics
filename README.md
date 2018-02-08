@@ -38,6 +38,8 @@ analytics.people_union({ "Items purchased": ["socks", "shirts"] });
 
 analytics.people_delete_user();
 
+analytics.reset();
+
 ```
 
 ## References
