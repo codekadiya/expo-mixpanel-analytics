@@ -9,7 +9,6 @@ const isIosPlatform = Platform.OS === 'ios';
 
 export default class ExpoMixpanelAnalytics {
   constructor(token) {
-    console.log(Constants)
     this.ready = false;
     this.queue = [];
 
