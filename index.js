@@ -1,10 +1,10 @@
 import {Platform, Dimensions} from 'react-native';
-import {Constants} from 'expo';
+import Constants from 'expo-constants';
 import {Buffer} from 'buffer';
 
 const {width, height} = Dimensions.get('window');
 
-const MIXPANEL_API_URL = 'http://api.mixpanel.com';
+const MIXPANEL_API_URL = 'https://api.mixpanel.com';
 const isIosPlatform = Platform.OS === 'ios';
 
 export default class ExpoMixpanelAnalytics {
@@ -109,7 +109,7 @@ export default class ExpoMixpanelAnalytics {
   _pushEvent(event) {
     let data = {
       event: event.name,
-      properties: event.props
+      properties: event.props || {}
     };
     if (this.userId) {
       data.properties.distinct_id = this.userId;
